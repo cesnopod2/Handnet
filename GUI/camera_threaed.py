@@ -1,5 +1,6 @@
 import queue
-from view import GUI
+# from view import GUI
+from gui_great_again import GUI
 import mediapipe as mp
 import cv2 as cv
 import threading

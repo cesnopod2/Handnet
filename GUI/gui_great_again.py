@@ -1,6 +1,5 @@
 from graphs import figure_skeleton
 import graphs
-from time import sleep
 from graphs import ax1, ax2, ax3
 import tkinter as tk
 import tkinter.ttk as ttk
@@ -8,8 +7,8 @@ from tkinter import filedialog
 import cv2 as cv
 import numpy as np
 from PIL import ImageTk, Image
-
 from tkinter import messagebox
+
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 import queue
 import datetime
@@ -19,20 +18,17 @@ from model.model import LSTM_model
 
 
 class Top_view:
-    """
-
-    """
-
     def __init__(self, master):
         self.master = master
-        self.frame = tk.Frame(self.master)
-        self.label = tk.Label(self.master)
+        self.top_frame = tk.Frame(self.master)
+        self.label = tk.Label(self.top_frame)
         self.label["text"] = "HandNET"
         self.label.config(font=("Courier", 44))
-        self.load_model_button = tk.Button(self.master, text="Load model")
-        # self.load_model_button.pack(anchor="ne", padx=20, pady=40)
-        self.load_model_button.place(bordermode="inside", height=50, width=100, x=100,y= 300)
+        self.load_model_button = tk.Button(self.top_frame, text="Load model")
+        self.label.pack(side="left")
+        self.load_model_button.pack(side="left", padx=20, pady=40)
         self.model_path = None
+        self.top_frame.pack()
 
 
 class Camera_display(ttk.Frame):
@@ -49,7 +45,6 @@ class Skeleton_display(ttk.Frame):
         self.master = master
         self.canvas = FigureCanvasTkAgg(figure_skeleton, master=self.master)
         self.toolbar = NavigationToolbar2Tk(self.canvas, self.master)
-        # self.canvas.get_tk_widget().pack(side=tk.LEFT)
         self.canvas.get_tk_widget().pack()
 
 
@@ -57,6 +52,7 @@ class Camera_skeleton_display(ttk.Frame):
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
         self.master = master
+        self.main_frame = tk.Frame(self.master)
         self.tab_controller = ttk.Notebook()
         self.camera_frame = ttk.Frame(self.tab_controller, width=660, height=460)
         self.skeleton_frame = ttk.Frame(self.tab_controller, width=660, height=460)
@@ -66,12 +62,14 @@ class Camera_skeleton_display(ttk.Frame):
         self.skeleton_view = Skeleton_display(self.skeleton_frame)
         self.tab_controller.add(self.camera_frame, text="Camera")
         self.tab_controller.add(self.skeleton_frame, text="skeleton")
+        self.tab_controller.pack(side="left", anchor="nw")
 
 
 class Graph_model_data(ttk.Frame):
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
         self.master = master
+        self.main_frame = tk.PanedWindow(self.master)
         self.tab_controller = ttk.Notebook()
         self.graph_frame = ttk.Frame(self.tab_controller, width=660, height=460)
         self.model_evaluation_frame = ttk.Frame(self.tab_controller, width=660, height=460)
@@ -85,6 +83,7 @@ class Graph_model_data(ttk.Frame):
         self.tab_controller.add(self.graph_frame, text="Join coordinates")
         self.tab_controller.add(self.model_evaluation_frame, text="Model information")
         self.tab_controller.add(self.data_collector_frame, text="Add gesture")
+        self.tab_controller.pack()
 
 
 class Model_evaluation_display(ttk.Frame):
@@ -93,7 +92,8 @@ class Model_evaluation_display(ttk.Frame):
         self.master = master
         self.graph_label = tk.Label(self.master)
 
-        imgtk = ImageTk.PhotoImage(image=Image.fromarray(cv.imread(r"C:\Handnet_git\model\model_info\graph unavailable.png")))
+        imgtk = ImageTk.PhotoImage(
+            image=Image.fromarray(cv.imread(r"C:\Handnet_git\model\model_info\graph unavailable.png")))
         self.graph_label.imgtk = imgtk
         self.graph_label.configure(image=imgtk)
 
@@ -113,7 +113,17 @@ class Model_evaluation_display(ttk.Frame):
         self.graph_label.pack()
 
     def update_data(self, info):
-        if info is not None :
+        # self.accuracy_str.set(f" Accuracy : {info['accuracy']}")
+        # self.precision_str.set(f" Precision : {info['precision']}")
+        # self.recall_str.set(f" Recall : {info['recall']}")
+        # self.f1_str.set(f" F1 score : {info['F1_score']}")
+        #
+        # imgtk = ImageTk.PhotoImage(
+        #     image=Image.fromarray(cv.imread(info["graph_path"])))
+        # self.graph_label.imgtk = imgtk
+        # self.graph_label.configure(image=imgtk)
+
+        if info is not None:
             self.accuracy_str.set(f" Accuracy : {info['accuracy']}")
             self.precision_str.set(f" Precision : {info['precision']}")
             self.recall_str.set(f" Recall : {info['recall']}")
@@ -123,9 +133,9 @@ class Model_evaluation_display(ttk.Frame):
                 image=Image.fromarray(cv.imread(info["graph_path"])))
             self.graph_label.imgtk = imgtk
             self.graph_label.configure(image=imgtk)
-        else :
-            messagebox.showinfo("Info", "Information about model can not be uploaded")
-
+        else:
+            messagebox.showinfo("Info", "Model successfully loaded, but information"
+                                        " about model can not be uploaded")
 
 
 class DataCollectorDisplay(ttk.Frame):
@@ -141,14 +151,28 @@ class DataCollectorDisplay(ttk.Frame):
         self.gui_data_collector.frame_amount_label.pack()
 
 
-
-
 class GUI:
     def __init__(self, master, queue, endCommand):
         self.master = master
         self.queue = queue
+        self.master.title("HandNET")
         self.master.geometry("{0}x{1}+0+0".format(
             master.winfo_screenwidth(), master.winfo_screenheight()))
+        self.statusbar = tk.Frame(self.master, background="#d5e8d4", height=80)
+        self.result_frame = tk.Frame(self.master)
+        self.main_window = tk.PanedWindow(self.master)
+
+        self.gesture_output = tk.StringVar()
+        self.gesture_label = tk.Label(self.result_frame,
+                                      textvariable=self.gesture_output)
+
+        self.gesture_label.config(font=("Courier",25))
+
+        self.gesture_label.pack(padx=200)
+        self.statusbar.pack(side="bottom", fill="x")
+        self.result_frame.pack(side="bottom")
+
+        self.main_window.pack(side="top")
         self.collect_data_logic = False
         self.results = None
         self.model = None
@@ -158,26 +182,36 @@ class GUI:
 
         # tkinter part
         self.top_view = Top_view(self.master)
-        self.top_view.label.pack(anchor="nw")
+        self.top_view.top_frame.pack()
+        # self.main_window.add(self.top_view.top_frame)
+        self.camera_display = Camera_skeleton_display(self.main_window)
+        self.left_display = Graph_model_data(self.main_window)
+
+        # self.statusbar = tk.Frame(self.master, background="#d5e8d4", height=200)
+        # self.statusbar.pack(side="bottom")
+        # self.top_view.label.pack(anchor="nw")
+
+        self.main_window.add(self.camera_display.main_frame)
+        self.main_window.add(self.left_display.main_frame)
         self.top_view.load_model_button["command"] = self.load_model
         # self.top_view.frame.pack()
-        self.camera_display = Camera_skeleton_display(self.master)
-        self.camera_display.tab_controller.pack(side="left")
+
         # self.left_display = Graph_view(self.master)
-        self.left_display = Graph_model_data(self.master)
-        self.left_display.tab_controller.pack()
-        self.left_display.graph_view.joint_combobox.pack(side="left", anchor="ne")
+
+        # self.left_display.tab_controller.pack()
+        # self.left_display.graph_view.joint_combobox.pack(side="left", anchor="ne")
         self.camera_display.pack(side=tk.LEFT)
         self.left_display.graph_view.graph.canvas.get_tk_widget().pack(side="bottom", ipadx=20)
         self.left_display.pack(side=tk.LEFT)
         self._gesture_names = ["Zoom", "Swipe right", "Swipe left", "Swipe up", "Swipe down", "Rotate X", "Rotate Y",
                                "Pinch", "Expand"]
 
-        self.gesture_output = tk.StringVar()
-        self.gesture_label = tk.Label(self.master,
-                                      textvariable=self.gesture_output)
+        # self.gesture_output = tk.StringVar()
+        # self.gesture_label = tk.Label(self.statusbar,
+        #                               textvariable=self.gesture_output)
+        # self.gesture_label.config(font=("Courier", ))
 
-        self.gesture_label.pack()
+        self.gesture_label.pack(side="bottom")
 
         self.left_display.data_collector_view.gui_data_collector.submit_button["command"] = self.create_folders
 

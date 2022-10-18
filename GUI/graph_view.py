@@ -23,3 +23,4 @@ class Graph_view(ttk.Frame):
         self.joint_combobox['state'] = 'readonly'
         self.joint_combobox.current(0)
         self.graph = Plot_display(self.master)
+        self.joint_combobox.pack()
