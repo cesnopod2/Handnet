@@ -2,7 +2,7 @@
 
 This repository contains code of engineering thesis entiled : 
 "Deep Neural Network based Dynamic Hand Gesture Recognition using
-RGB-D Data" authored by the repository owner.  
+RGB-D Data" authored by the repository owner created on the Warsaw Institute of Technology.  
 
 Uploaded project contains proposed gesture recogniton module based on 
 LSTM units. Implementation of the model contains in directory : 
