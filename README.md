@@ -12,3 +12,10 @@ different recognition models to check how it behave in real-time situation.
 It has dedicated GUI. Graphical user interface's code is also included in this repository. 
 It was implemented using the Tkinter library.
 
+## Roadmap
+
+
+## Solution presentation 
+
+
+
