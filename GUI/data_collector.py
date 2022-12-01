@@ -1,12 +1,17 @@
 import tkinter as tk
 import os
-
 import numpy as np
 
 
 class DataCollector:
+    """
+    DataCollector class is responsible for handling the whole logic
+    from graphical user interface.
+    It avoids creating folders with gesture names and person id's, what helps in creating well-structured
+    custom datasets with gestures performed by the users.
+    """
     def __init__(self):
-        self.data_path = r"C:\Users\Filip\Desktop\Custom_gestures"
+        self.data_path = r"C:\Users\Filip\Desktop\Final_custom_gesture"
         self.gesture_folder_path = None
         self.person_folder_path = None
         self.essai_file_path = None
@@ -14,7 +19,6 @@ class DataCollector:
         self.gesture_name = None
         self.person_name = None
         self.essai_id = None
-        # self.frame_number
 
     def save_data(self, results):
         pass
@@ -27,6 +31,7 @@ class DataCollector:
             else:
                 os.mkdir(self.gesture_folder_path)
                 print(f"Directory of gesture :{self.gesture_name} has successfully created.")
+
         except Exception:
             pass
 
@@ -73,17 +78,13 @@ class DataCollector:
         self._person_name = value
         self.define_person()
 
-    # @property
-    # def essai_id(self):
-    #     return self._essai_id
-    #
-    # @essai_id.setter
-    # def essai_id(self, value):
-    #     self._essai_id = value
-    #     self.create_essai()
-
 
 class GUI_DataCollector:
+    """
+
+    Class GUI_DataCollector is responsible for displaying data collection view.
+
+    """
     def __init__(self, master):
         self.master = master
         self.gesutre_name = tk.StringVar()

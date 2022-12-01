@@ -1,10 +1,12 @@
 from tensorflow import keras
-import glob
 import os
 import json
 
 
 class LSTM_model:
+    """
+    Class LSTM_model is responsible for uploading the defined by user model and gesture prediction.
+    """
     def __init__(self, filename):
         self.model = keras.models.load_model(filename)
         self.filename = os.path.split(filename)[-1]

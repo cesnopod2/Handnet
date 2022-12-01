@@ -1,6 +1,5 @@
 import queue
-# from view import GUI
-from gui_great_again import GUI
+from graphical_user_interface import GUI
 import mediapipe as mp
 import cv2 as cv
 import threading
@@ -11,6 +10,7 @@ from graphs import animate_skeleton, animate_data
 import matplotlib.animation as animation
 from graphs import figure, figure_skeleton
 
+
 class ThreadCamera:
     def __init__(self, master):
         self.master = master
@@ -18,7 +18,6 @@ class ThreadCamera:
         self.gui = GUI(master, self.queue, self.end_application)
 
         self.running = True
-
         self.camera = cv.VideoCapture(0)
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_holistic = mp.solutions.holistic
@@ -43,10 +42,8 @@ class ThreadCamera:
                 _, frame = self.camera.read()
                 results = holistic.process(frame)
                 image = cv.cvtColor(frame, cv.COLOR_RGB2BGR)
-
                 self.mp_drawing.draw_landmarks(image, results.right_hand_landmarks,
                                                self.mp_holistic.HAND_CONNECTIONS)
-
                 self.results = results.right_hand_landmarks
                 image = cv.flip(image, 1)
                 data = (image, results)
@@ -55,7 +52,6 @@ class ThreadCamera:
     def end_application(self):
         self.camera.release()
         self.running = False
-
 
 
 if __name__ == "__main__":

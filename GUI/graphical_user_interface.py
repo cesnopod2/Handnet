@@ -18,6 +18,10 @@ from model.model import LSTM_model
 
 
 class Top_view:
+    """
+    Class Top_view is responsible for displaying the top part of the GUI, it means the application name and uploading
+    model button.
+    """
     def __init__(self, master):
         self.master = master
         self.top_frame = tk.Frame(self.master)
@@ -32,6 +36,10 @@ class Top_view:
 
 
 class Camera_display(ttk.Frame):
+    """
+    Class Camera_display avoids displaying frames grabbed by the camera
+    and the result of the gesture recognition task.
+    """
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
         self.master = master
@@ -40,6 +48,10 @@ class Camera_display(ttk.Frame):
 
 
 class Skeleton_display(ttk.Frame):
+    """
+    Class Skeleton_display avoids displaying graph of the skeletal
+    data updating in real time.
+    """
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
         self.master = master
@@ -49,6 +61,10 @@ class Skeleton_display(ttk.Frame):
 
 
 class Camera_skeleton_display(ttk.Frame):
+    """
+    Class Camera_skeleton_display is responsible for handling
+    changes between tabs entitled "Camera" and "Skeleton".
+    """
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
         self.master = master
@@ -61,11 +77,18 @@ class Camera_skeleton_display(ttk.Frame):
         self.skeleton_frame.pack()
         self.skeleton_view = Skeleton_display(self.skeleton_frame)
         self.tab_controller.add(self.camera_frame, text="Camera")
-        self.tab_controller.add(self.skeleton_frame, text="skeleton")
+        self.tab_controller.add(self.skeleton_frame, text="Skeleton")
         self.tab_controller.pack(side="left", anchor="nw")
 
 
 class Graph_model_data(ttk.Frame):
+    """
+    Graph_model_data class responsible for left side of the GUI.
+    It handles changing views by user between tabs entitled :
+        "Joint_coordinates",
+        "Model_information",
+        "Add_gesture"
+    """
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
         self.master = master
@@ -87,6 +110,15 @@ class Graph_model_data(ttk.Frame):
 
 
 class Model_evaluation_display(ttk.Frame):
+
+    """
+    Model_evaluation_display class is responsible for view in "Model_evaluation" window.
+    It allows on displaying  model evaluation scores such as :
+        -accuracy,
+        -precision,
+        -recall coefficients
+        - graph of training loss.
+    """
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
         self.master = master
@@ -113,15 +145,6 @@ class Model_evaluation_display(ttk.Frame):
         self.graph_label.pack()
 
     def update_data(self, info):
-        # self.accuracy_str.set(f" Accuracy : {info['accuracy']}")
-        # self.precision_str.set(f" Precision : {info['precision']}")
-        # self.recall_str.set(f" Recall : {info['recall']}")
-        # self.f1_str.set(f" F1 score : {info['F1_score']}")
-        #
-        # imgtk = ImageTk.PhotoImage(
-        #     image=Image.fromarray(cv.imread(info["graph_path"])))
-        # self.graph_label.imgtk = imgtk
-        # self.graph_label.configure(image=imgtk)
 
         if info is not None:
             self.accuracy_str.set(f" Accuracy : {info['accuracy']}")
@@ -139,6 +162,9 @@ class Model_evaluation_display(ttk.Frame):
 
 
 class DataCollectorDisplay(ttk.Frame):
+    """
+    Class DataCollectorDisplay is responsible for displaying and handling the data collection part.
+    """
     def __init__(self, master):
         self.master = master
         self.gui_data_collector = GUI_DataCollector(self.master)
@@ -152,6 +178,9 @@ class DataCollectorDisplay(ttk.Frame):
 
 
 class GUI:
+    """
+    Main graphical user interface class that combines all instances of classes responsible for different views.
+    """
     def __init__(self, master, queue, endCommand):
         self.master = master
         self.queue = queue
@@ -178,38 +207,21 @@ class GUI:
         self.model = None
         self.model_path = None
         self.results_to_model = []
-        # self.results_to_model_arr = None
 
         # tkinter part
         self.top_view = Top_view(self.master)
         self.top_view.top_frame.pack()
-        # self.main_window.add(self.top_view.top_frame)
         self.camera_display = Camera_skeleton_display(self.main_window)
         self.left_display = Graph_model_data(self.main_window)
-
-        # self.statusbar = tk.Frame(self.master, background="#d5e8d4", height=200)
-        # self.statusbar.pack(side="bottom")
-        # self.top_view.label.pack(anchor="nw")
-
         self.main_window.add(self.camera_display.main_frame)
         self.main_window.add(self.left_display.main_frame)
         self.top_view.load_model_button["command"] = self.load_model
-        # self.top_view.frame.pack()
-
-        # self.left_display = Graph_view(self.master)
-
-        # self.left_display.tab_controller.pack()
-        # self.left_display.graph_view.joint_combobox.pack(side="left", anchor="ne")
         self.camera_display.pack(side=tk.LEFT)
         self.left_display.graph_view.graph.canvas.get_tk_widget().pack(side="bottom", ipadx=20)
         self.left_display.pack(side=tk.LEFT)
-        self._gesture_names = ["Zoom", "Swipe right", "Swipe left", "Swipe up", "Swipe down", "Rotate X", "Rotate Y",
-                               "Pinch", "Expand"]
 
-        # self.gesture_output = tk.StringVar()
-        # self.gesture_label = tk.Label(self.statusbar,
-        #                               textvariable=self.gesture_output)
-        # self.gesture_label.config(font=("Courier", ))
+        self._gesture_names = ["Expand", "Grab", "Pinch", "Rotation_CW", "Rotation_CWW", "Swipe down", "Swipe up", "Swipe V",
+                               "Tap"]
 
         self.gesture_label.pack(side="bottom")
 
@@ -224,7 +236,6 @@ class GUI:
         self.collector_frame_counter = 0
         # adding event when cumbobox is clicked
         self.left_display.graph_view.joint_combobox.bind('<<ComboboxSelected>>', self.graph_changed)
-
         # adding event when x on keyboard is clicked
         self.mistery_button = tk.Button(command=self.start_collecting_data)
         self.master.bind('<x>', self.start_collecting_data)
@@ -347,8 +358,6 @@ class GUI:
         if self.collector_frame_counter > 30:
             print("stop collecting data :D")
 
-        # self.gui_data_collector.frame_amount_label["text"] = str(self.collector_frame_counter)
-
     @staticmethod
     def reset_graph():
         # clear axies and data
@@ -377,8 +386,6 @@ class GUI:
     @frame_counter.setter
     def frame_counter(self, value):
         self._frame_counter = value
-        # print()
-        # print("appended to results_to_model")
         self.check_and_predict()
 
     @property
