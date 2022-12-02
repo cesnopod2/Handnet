@@ -17,7 +17,7 @@ It was implemented using the Tkinter library.
 
 ## Roadmap
 * data
-  -paths_stat_stop_label.pkl
+  - paths_stat_stop_label.pkl
 - GUI
   - camera_thread.py
   - data_collector.py
@@ -28,6 +28,15 @@ It was implemented using the Tkinter library.
   - model info
   - LSTM.ipynb
 Readme.md
+
+Files description : 
+ - paths_stat_stop_label.pkl - file with dataframe containing inforamtion essential to creating dataset. 
+ - camera_thread.py - application is initialized in this file. 
+ - data_collector.py - contains classes related to custom dataset creation and hadling it in GUI. 
+ - graph_views.py - file containing handling graph real-time updates : joint coordinates graphs & skeletal data graph.
+ - graphical_user_interface.py - contains classes used for displaying and handling GUI. 
+ -  graphs.py - file contains graph initialization. 
+
 
 ## Solution presentation 
 
