@@ -17,18 +17,20 @@ It was implemented using the Tkinter library.
 
 ## Roadmap
 * data
-  -
+  -paths_stat_stop_label.pkl
 - GUI
-  -
-  -
-  -
-  -
+  - camera_thread.py
+  - data_collector.py
+  - graph_view.py
+  - graphical_user_interface.py
+  - graphs.py
 - model
-  -
-  -
+  - model info
+  - LSTM.ipynb
 Readme.md
 
 ## Solution presentation 
+
 
 
 
