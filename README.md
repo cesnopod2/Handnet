@@ -16,9 +16,22 @@ It has dedicated GUI. Graphical user interface's code is also included in this r
 It was implemented using the Tkinter library.
 
 ## Roadmap
-
+- data
+  -
+- GUI
+  -
+  -
+  -
+  -
+-model
+  -
+  -
+Readme.md
 
 ## Solution presentation 
 
 
 
+## Authors
+
+- [@octokatherine](https://github.com/cesnopod2)
