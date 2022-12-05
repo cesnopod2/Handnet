@@ -1,0 +1,8 @@
+{
+   "accuracy": 0.91,
+   "recall": 0.90,
+   "precision": 0.93,
+   "F1_score" : 0.89,
+  "graph_path": "C:/Handnet_git/model/model_info/categorical accuracy.png"
+
+}
