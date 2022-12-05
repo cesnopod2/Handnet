@@ -19,9 +19,11 @@ from model.model import LSTM_model
 
 class Top_view:
     """
-    Class Top_view is responsible for displaying the top part of the GUI, it means the application name and uploading
+    Class Top_view is used to represent top part of the GUI.
+    It is responsible for displaying the application name label and uploading
     model button.
     """
+
     def __init__(self, master):
         self.master = master
         self.top_frame = tk.Frame(self.master)
@@ -37,9 +39,11 @@ class Top_view:
 
 class Camera_display(ttk.Frame):
     """
-    Class Camera_display avoids displaying frames grabbed by the camera
+    Class Carera_display is used to represent window, where frames are displayed.
+    It enables displaying frames grabbed by the camera
     and the result of the gesture recognition task.
     """
+
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
         self.master = master
@@ -49,9 +53,10 @@ class Camera_display(ttk.Frame):
 
 class Skeleton_display(ttk.Frame):
     """
-    Class Skeleton_display avoids displaying graph of the skeletal
-    data updating in real time.
+    Class Skeleton display represents window, where skeleton is displayed.
+    It enables displaying graph of the skeletal data, updating in real time.
     """
+
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
         self.master = master
@@ -65,6 +70,7 @@ class Camera_skeleton_display(ttk.Frame):
     Class Camera_skeleton_display is responsible for handling
     changes between tabs entitled "Camera" and "Skeleton".
     """
+
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
         self.master = master
@@ -83,12 +89,13 @@ class Camera_skeleton_display(ttk.Frame):
 
 class Graph_model_data(ttk.Frame):
     """
-    Graph_model_data class responsible for left side of the GUI.
+    Graph_model_data class represents left side of the GUI.
     It handles changing views by user between tabs entitled :
         "Joint_coordinates",
         "Model_information",
         "Add_gesture"
     """
+
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
         self.master = master
@@ -110,7 +117,6 @@ class Graph_model_data(ttk.Frame):
 
 
 class Model_evaluation_display(ttk.Frame):
-
     """
     Model_evaluation_display class is responsible for view in "Model_evaluation" window.
     It allows on displaying  model evaluation scores such as :
@@ -119,6 +125,7 @@ class Model_evaluation_display(ttk.Frame):
         -recall coefficients
         - graph of training loss.
     """
+
     def __init__(self, master):
         ttk.Frame.__init__(self, master)
         self.master = master
@@ -165,6 +172,7 @@ class DataCollectorDisplay(ttk.Frame):
     """
     Class DataCollectorDisplay is responsible for displaying and handling the data collection part.
     """
+
     def __init__(self, master):
         self.master = master
         self.gui_data_collector = GUI_DataCollector(self.master)
@@ -181,6 +189,7 @@ class GUI:
     """
     Main graphical user interface class that combines all instances of classes responsible for different views.
     """
+
     def __init__(self, master, queue, endCommand):
         self.master = master
         self.queue = queue
@@ -195,7 +204,7 @@ class GUI:
         self.gesture_label = tk.Label(self.result_frame,
                                       textvariable=self.gesture_output)
 
-        self.gesture_label.config(font=("Courier",25))
+        self.gesture_label.config(font=("Courier", 25))
 
         self.gesture_label.pack(padx=200)
         self.statusbar.pack(side="bottom", fill="x")
@@ -220,7 +229,8 @@ class GUI:
         self.left_display.graph_view.graph.canvas.get_tk_widget().pack(side="bottom", ipadx=20)
         self.left_display.pack(side=tk.LEFT)
 
-        self._gesture_names = ["Expand", "Grab", "Pinch", "Rotation_CW", "Rotation_CWW", "Swipe down", "Swipe up", "Swipe V",
+        self._gesture_names = ["Expand", "Grab", "Pinch", "Rotation_CW", "Rotation_CWW", "Swipe down", "Swipe up",
+                               "Swipe V",
                                "Tap"]
 
         self.gesture_label.pack(side="bottom")
@@ -318,7 +328,6 @@ class GUI:
     def load_model(self):
         self.model_path = filedialog.askopenfilename(title="Select a file",
                                                      filetype=(("h5", "*.h5"), ("hdf5", "*.hdf5")))
-        # add here loading model
         self.model = LSTM_model(self.model_path)
         self.left_display.model_display.update_data(self.model.get_model_information())
 
@@ -326,9 +335,7 @@ class GUI:
         if self.frame_counter == 30 and self.model is not None:
             try:
                 input_data = np.array(self.results_to_model.copy())
-                # print(input_data.shape)
                 input_data = np.expand_dims(input_data, axis=0)
-                # print(input_data.shape)
                 prediction = self.model.make_prediction(input_data)
                 print(f" clean prediction values :{prediction}")
                 prediction = np.argmax(prediction, axis=1).tolist()
