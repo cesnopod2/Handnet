@@ -38,10 +38,6 @@ Files description :
  -  graphs.py - file contains graph initialization. 
 
 
-## Solution presentation 
-
-
-
 
 ## Authors
 
