@@ -1,5 +1,6 @@
 
-# Handnet
+# Handnet_git
+
 
 This repository contains code of engineering thesis entiled : 
 "Deep Neural Network based Dynamic Hand Gesture Recognition using
@@ -11,6 +12,7 @@ RGB-D Data" authored by the repository owner created on the Warsaw Institute of 
 Uploaded project contains proposed gesture recogniton module based on 
 LSTM units. Implementation of the model contains in directory : 
 model/LSTM.ipynb. 
+
 
 Moreover I've proposed hand gesture recognition framework, which enables uploading
 different recognition models to check how it behave in real-time situation.
@@ -44,3 +46,4 @@ Files description :
 ## Authors
 
 - [@cesnopod2](https://github.com/cesnopod2)
+
